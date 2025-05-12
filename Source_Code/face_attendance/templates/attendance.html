@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mark Attendance</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 400px;
+        }
+        video {
+            width: 100%;
+            border-radius: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #28a745;
+        }
+        p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        #timestamp {
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Face Recognition Attendance</h2>
+    <video id="video" autoplay playsinline></video>
+    <button onclick="markAttendance()">Mark My Attendance</button>
+    <p id="response"></p>
+    <p id="timestamp"></p>
+    <a href="/">← Back to Dashboard</a>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => video.srcObject = stream);
+
+    function markAttendance() {
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+
+        const imageData = canvas.toDataURL('image/jpeg');
+        fetch("/mark", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ image: imageData })
+        }).then(res => res.json())
+        .then(response => {
+            const now = new Date();
+            const timestamp = now.toLocaleTimeString();
+            document.getElementById('response').textContent = response.message;
+            document.getElementById('timestamp').textContent = "Timestamp: " + timestamp;
+        });
+    }
+</script>
+</body>
+</html>

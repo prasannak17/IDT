@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Face</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to right, #fdfbfb, #ebedee);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 400px;
+        }
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        video {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 10px;
+        }
+        p {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Register Your Face</h2>
+    <input type="text" id="name" placeholder="Enter Name">
+    <input type="text" id="roll" placeholder="Enter Roll Number">
+    <video id="video" autoplay playsinline></video>
+    <button onclick="captureFace()">Capture Face</button>
+    <p id="status"></p>
+    <a href="/">← Back to Dashboard</a>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    let captureCount = 0;
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => video.srcObject = stream);
+
+    function captureFace() {
+        const name = document.getElementById('name').value;
+        const roll = document.getElementById('roll').value;
+
+        if (!name || !roll) {
+            alert("Please enter both name and roll number.");
+            return;
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+
+        const imageData = canvas.toDataURL('image/jpeg');
+        fetch("/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                name: name,
+                roll: roll,
+                count: captureCount,
+                image: imageData
+            })
+        }).then(() => {
+            captureCount++;
+            document.getElementById('status').textContent = `Image ${captureCount} captured.`;
+            if (captureCount === 5) {
+                document.getElementById('status').textContent = "Registration complete!";
+            }
+        });
+    }
+</script>
+</body>
+</html>

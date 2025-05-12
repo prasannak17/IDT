@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance Management System - Home</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f8;
+        }
+        .navbar {
+            background-color: #004aad;
+            padding: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .navbar .logo {
+            color: #ffffff;
+            font-size: 40px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .navbar-links a {
+            color: #ffffff;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 25px;
+            transition: color 0.3s;
+        }
+        .navbar-links a:hover {
+            color: #ffdd00;
+        }
+        .content {
+            text-align: center;
+            margin-top: 100px;
+        }
+        .content h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .content p {
+            font-size: 18px;
+            color: #666;
+        }
+        .button-container {
+            margin-top: 30px;
+        }
+        .button-container a {
+            text-decoration: none;
+            background-color: #004aad;
+            color: #ffffff;
+            padding: 12px 24px;
+            margin: 10px;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .button-container a:hover {
+            background-color: #00337c;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <a href="{{ url_for('index') }}" class="logo">Attendance System</a>
+    <div class="navbar-links">
+        <a href="https://erp.rajalakshmi.org/">ERP</a>
+        <a href="{{ url_for('register_page') }}">Register</a>
+        <a href="{{ url_for('attendance_page') }}">Attendance</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+        <a href="https://www.rajalakshmi.org/">About REC</a>
+
+    </div>
+</div>
+
+<div class="content">
+    <h1>Welcome to Attendance Management System</h1>
+    <p>Use the options below to get started</p>
+
+    <div class="button-container">
+        <a href="{{ url_for('register_page') }}">Register New Student</a>
+        <a href="{{ url_for('attendance_page') }}">Mark Attendance</a>
+        <a href="{{ url_for('dashboard') }}">View Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>
